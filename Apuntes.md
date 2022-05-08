@@ -69,7 +69,8 @@ No todos los 34 pines I/O, comienzan con la función digital, esta debe ser conf
 ```
 
 -   **PIN RA6:**     Se utiliza en el módulo oscilador, para emplearlo, se debe utilizar el oscilador interno.
-``nasm
+
+'``nasm
     CONFIG FOSC = INTOSC_ECIO
 ```
 
