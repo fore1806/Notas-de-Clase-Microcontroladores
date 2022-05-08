@@ -58,36 +58,36 @@ No todos los 34 pines I/O, comienzan con la función digital, esta debe ser conf
 
 -   **PIN RB5:**     Por defecto tienen función LVP (Low Voltage Programming)
 
-```asembler
+```nasm
     CONFIG LVP = OFF
 ```
 
 -   **PIN RE3:**     Tiene funciones compartidas de MCLR (Master Clear), al liberarlo solo puede ser usado como ***entrada*** 
 
-```asembler
+```nasm
     CONFIG MCLRE = OFF
 ```
 
 -   **PIN RA6:**     Se utiliza en el módulo oscilador, para emplearlo, se debe utilizar el oscilador interno.
-```asembler
+``nasm
     CONFIG FOSC = INTOSC_ECIO
 ```
 
 -   **PIN RB0, RB1, RB2 y RB4:**     Tienen funciones del módulo ADC
 
-```asembler
+```nasm
     CONFIG PBADEN = OFF
 ```
 
 -   **PIN RC4 y RC5:**     Tienen funciones del módulo USB, al liberarlos solo pueden ser usados como ***entradas digitales***
 
-```asembler
+```nasm
     bcf UCON, 3
 ```
 
 -   **PIN RA0, RA1, RA2, RA3, RA4, RB0, RB1, RB2,  RB4, RE0, RE1 y RE2:**     Tienen funciones del módulo ADC, con la siguiente instrucción, la instrucción PBADEN seria una redundancia.
 
-```asembler
+```nasm
     ;CONFIG PBADEN = OFF    ;redundancia
     movlw   .15
     movwf   ADCON1
@@ -101,7 +101,7 @@ La configuración de pines I/O se hace a través de los registros ***TRISx, LATx
 
 Estos pines arrancan con un valor de 1, definiendo todos los pines como entrada; para definir alguna salida, debe definirse el pin como 0
 
-```asembler
+```nasm
     bcf TRISB, 3    ;TRISB3 = 0, RB3 salida
     bsf TRISB, 0    ;TRISB0 = 1, RB0 entradada
     clrf TRISD      ;todo el puerto D como salida
@@ -113,7 +113,7 @@ Estos pines arrancan con un valor de 1, definiendo todos los pines como entrada;
 
 Estos pines arrancan indeterminados después de un reset, se encargan de establecer el valor lógico de los pines de salida digital, 0, establece un nivel bajo, 1, un nivel alto.
 
-```asembler
+```nasm
     bcf LATB, 3    ;LATB3 = 0, RB3 salida en bajo
     bsf LATD, 1    ;LATD1 = 1, RB3 salida en alto
     setf LATD      ;todo el puerto D como salida alta
@@ -125,7 +125,7 @@ Estos pines arrancan indeterminados después de un reset, se encargan de estable
 
 Se encargan de consultar el valor lógico de los pines de entrada digital, 0, representa un nivel bajo, 1, un nivel alto.
 
-```asembler
+```nasm
     btfss PORTB,0   ;Si RB0 es 0
     btfsc PORTB,0   ;Si RB0 es 1
     ;leer todo el puerto
