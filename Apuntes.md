@@ -151,7 +151,7 @@ Bloque Inicio o Fin
 
 -   Indica el inicio y final de un programa, se trata de bloques con forma de elipse, solo puede haber un bloque inicio, pero pueden existir diferentes bloques de fin dependiendo del camino.
 
-![](images/inicio-fin.PNG)
+![](https://github.com/fore1806/Notas-de-Clase-Microcontroladores/blob/master/images/inicio-fin.png)
 
 Bloque Instrucción
 
