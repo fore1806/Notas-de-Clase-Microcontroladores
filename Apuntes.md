@@ -159,7 +159,7 @@ Bloque Instrucción
 
 - Siempre se llega por arriba y se sale por abajo (Estética), son representados por rectangulos
 
-![](images/instruccion.PNG)
+![](https://github.com/fore1806/Notas-de-Clase-Microcontroladores/blob/master/images/instruccion.png)
 
 Bloque Conjunto de instrucciones
 
@@ -167,19 +167,19 @@ Bloque Conjunto de instrucciones
 
 -   Se usan para representar una función común y reducir el tamaño general
 
-![](images/InstructionSET.PNG)
+![](https://github.com/fore1806/Notas-de-Clase-Microcontroladores/blob/master/images/InstructionSET.png)
 
 Bloque Condicional
 
 -   Indica toma de decisiones, sobre por donde seguir el camino, existe una condición lógica (verdadero o falso)
 
-![](images/Condicional.PNG)
+![](https://github.com/fore1806/Notas-de-Clase-Microcontroladores/blob/master/images/Condicional.png)
 
 Bloque Iteración
 
 Repetición de n veces de un set de instrucciones, representa una sentencia lógica de tipo ciclo en programación.
 
-![](images/iteracion.PNG)
+![](https://github.com/fore1806/Notas-de-Clase-Microcontroladores/blob/master/images/iteracion.png)
 
 Se recomienda un nivel intermedio entre diagramas generales y detallados.
 
