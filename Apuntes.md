@@ -411,3 +411,23 @@ Código en C
         *************************
     }
 ```
+
+### [Descripción y uso de retardos para microcontroladores](https://www.youtube.com/watch?v=8n-T8QwMPOQ)
+
+#### Retardo:
+
+-   Subrutinas dentro del lenguaje ensamblador, deben ser llamadas y retornar
+-   La mas básica es la instrucción ***nop*** 
+-   Se implementan a través de ciclos decrementales
+-   El valor máximo dependera del microcontrolador, para el caso de uno de 8 bits, el ciclo más grande será 2 a la 8 menos 1, osea 255.
+-   Si se requieren ciclos más grandes se deben utilizar ciclos anidados.
+
+```nasm
+    Retardo
+        movlw   .81
+        movwf   aux1
+    AuxRetardo
+        decfsz  aux1,f
+        goto    AuxRetardo
+        return
+```
