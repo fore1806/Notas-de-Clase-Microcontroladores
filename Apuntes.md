@@ -8,9 +8,118 @@ Microcontroladores
 
 Universidad Nacional de Colombia Sede Bogotá
 
+##  Videos Semana 1
+
+### [Ensamblador](https://www.youtube.com/watch?v=rJJoBO52b0I&list=PLBE1L4ZEFvu4wgD_cVqE2S6kjkicAhwi2&index=1)
+
+Ensamblador, lenguaje de máquina basado en ***mnemónicos***
+
+```nasm
+    incf var1   ;incrementar
+    decf var2   ;decrementar
+    comf LATD   ;Complemento a 1
+    movf PORTB  ;Mover el valor de un registro
+```
+
+Ejemplo
+
+```nasm
+    include P18F4550.inc
+    config FOSC = INTOSC_EC
+    aux1 equ 0h
+    Inicio
+        clrf aux1   ;Setear en 0
+    Menu
+        incf aux1,f   ;suma 1 a aux1 y lo almacena en aux1
+        goto Menu   ;Saltar a la etiqueta menu nuevamente
+```
+#### Secciones de un código
+
+-   Inclusión de librerías y definición de símbolos
+-   Directivas de configuración
+-   Definición de variables
+-   Instrucciones de ensamblador
+
+##### Inclusión de librerías y definición de símbolos
+
+```nasm
+    include P18F4550.inc
+    include milibreria.inc  ;Libreria propia
+```
+Se debe tener cuidado con el manejo de las direcciones de memoria de instrucciones a ña hora de crear librerías propias, para que no se sobrelapen los codigos de las librerías.
+
+##### Directivas de configuración
+
+-   Perro Guardian  (WDT)
+-   Fuente de reloj (Interna, externa, reloj)
+-   Protección de la memoria de instrucciones ante lectura
+-   Asignación de pines I/O a algunos periféricos
+
+##### Definición de variables
+
+No existen tipos
+
+2048 posiciones de memoria RAM desde ***0h*** hasta ***FFFh***
+
+```nasm
+    aux1 equ F45h   ;varName equ memoryPosition
+```
+
+Arreglos y vectores se logran con ***apuntadores***
+
+##### Instrucciones de ensamblador
+
+Estructura
+
+```nasm
+    Etiqueta
+        Mnemónico   Opernados   ;Comentarios
+```
+
+```nasm
+    Inicio
+        clrf aux1   ;Setear en 0
+        movff aux1,aux2 ;Copia de aux1 a aux2
+    Menu
+        nop     ;El microcontrolador no hace nada durante un ciclo de bus
+        goto Menu   ;Saltar a la etiqueta menu nuevamente
+```
+
+### [Set de instrucciones](https://www.youtube.com/watch?v=5R3z-nYLlCg&list=PLBE1L4ZEFvu4wgD_cVqE2S6kjkicAhwi2&index=2)
+
+Set RISC (Reduced Instruction Set Computing)
+
+75 instrucciones más 8 instrucciones del set extendido (aplicaciones avanzadas)
+
+Se pueden clasificar como
+
+#### Según la operación
+
+-   **Operaciones orientadas a byte.** Operaciones aritemticas, logicas o de movimiento, en las que se indica a la ALU que hacer con 8 bits de forma simultanea (addwf, incf, xorwf, decfsz)
+
+-   **Operaciones orientadas a bit.** Operaciones sobre un unico bit de un registro o variable. (BSF, BCF, BTFSC)
+
+-   **Operación de control.** Consultan o manipulan los registros de la CPU, expecto el W (nop, call)
+
+-   **Operación de constantes.** Utilizan constantes para su ejecución (movlw, addlw, mullw, sublw)
+
+```nasm
+    movlw .5    ;. se usa para decimales
+    addlw '@'   ;'simbolo'  se usa para asccii
+    sublw '0x25'    ;x se usa para hexadecimal
+    mullw b'11001010'   ;b'num' se usa para binario
+    andlw o'167'    ;o'num' se usa para octal
+    lfsr aux1   ; Se usa para apuntadores
+```
+### [Parte III](https://www.youtube.com/watch?v=fYE38mrrOjU&list=PLBE1L4ZEFvu4wgD_cVqE2S6kjkicAhwi2&index=3)
+
+50 % del ciclo ON y 50 % OFF aproximadamente para el correcto funcionamiento de los flip flops internos del microcontrolador.
+
+
+
 ##  Videos Semana 3
 
-### [PIC18F4550, Características y puertos de entrada salida] (https://www.youtube.com/watch?v=gQr_DS2BHHg)
+### [PIC18F4550, Características y puertos de entrada salida](https://www.youtube.com/watch?v=gQr_DS2BHHg)
 
 ####    Características
 
@@ -134,7 +243,7 @@ Se encargan de consultar el valor lógico de los pines de entrada digital, 0, re
     movwf mivar ;mivar = PORTD
 ```
 
-### [Descripción breve de diagramas de flujo] (https://www.youtube.com/watch?v=S23FwInZ7xA)
+### [Descripción breve de diagramas de flujo](https://www.youtube.com/watch?v=S23FwInZ7xA)
 
 ####    Características de diagramas de flujo
 
@@ -187,3 +296,118 @@ Se recomienda un nivel intermedio entre diagramas generales y detallados.
 Diferenciar los recursos a utilizar, en computadores es común el bloque fin; sin embargo, para microcontroladores es poco frecuente.
 
 Para describir funciones o subrutinas, se emplean flujos adicionales.
+
+
+##  Videos Semana 4
+
+### [Interrupciones en microcontroladores de 8 bits](https://www.youtube.com/watch?v=Fl5CL-wpzMk)
+
+#### Interrupción: 
+
+-   Rutinas de código que se ejecutan cuando un evento extraordianrio sucedió
+-   Pueden ser periódica o aperiódica
+-   La rutina de código que atienda la iterrupción se conoce como ***Interrupt Service Routine (ISR)***
+-   Cuando ocurre la interrupción, se termina de ejecutar la instrucción actual, salva el contexto (valor del CP, W, STATUS) y luego va a ISR. 
+-   En lenguajes como C, se puede parar en medio de una instrucción en ensamblador no
+-   Al finalizar la ISR se recupera el contexto.
+-   Usados para realizar tareas en paralelo
+-   En **ensamblador** una ISR es una subrutina ubicada en una parte especial del código, requiere una configuración adicional. Estas ***nunca se llaman*** y deben culminar con alguna de las instrucciones.
+
+```nasm
+    retfie
+    rti
+```
+
+-   En **C** las interrupciones son funciones, con una sintaxis especial para uqe el compilador pueda entenderlas como una ISR
+-   **Vectores de Interrupción: ** Direcciones de memoria a las cuales se dirige el microcontrolador cuando ocurre el evento de interrupción
+
+#### Eventos que generan una interrupción
+
+-   Cambio en un pin de entrada 
+-   sobreflujo de un temporizador
+-   Culminación de una conversión análogo a digital (el módulo ADC se demora un tiempo realizando la conversión, es bueno saber cuando ha finalizado)
+-   Recepción de un dato por comunicación serial
+-   Error en un púerto de comunicaión (errores de marcado, o errores de colisiones de datos en protocolos sincronicos como el SPI)
+-   Finalización de la transmisión de un dato
+
+#### Configuración de interrupciones
+
+-   Deben tener habilitación global y en casos habilitaciones por grupos.
+-   Toda fuente de interrupción debe tener una habilitación individual conocida como máscara, ***Interrupt Enable (IE)***
+-   Toda fuente de interrupción debe tener un indicador de ocurrencia conocido como bandera, ***Interrupt Flag (IF)***
+-   Capa fuente de interrupción cuenta con un vector de interrupción (vectorizadas) depende del fabricante
+-   No todas las fuentes de interrupción cuentan con un vector de interrupción (no vectorizadas), permite definir la prioridad, ***Interrupt Priority (IP)***
+-   Una interrupción de ***alta prioridad*** puede interrumpir una de ***baja prioridad*** así, cuando se ejecute la de alta prioridad parará la de baja prioridad y cuando termine la de alta prioridad, se terminará la de baja para ahi si volver al código principal.
+-   El PIC18F4550 cuenta con 21 fuentes de interrupción.
+
+### [Interrupción externa 0 para el PIC18 con ejemplo en C](https://www.youtube.com/watch?v=06kbWiEcug8)
+
+#### Configuración
+
+-   Configurar el periférico o los periféricos
+-   Seleccionar la prioridad (opcional)
+-   Asegurarse que la bandera empiece en cero.
+-   Habilitar individualmente la interruppción.
+-   Habilitar el grupo de interrupciones si se requiere.
+-   Habilitar globalmente las interrupciones
+
+#### ISR
+
+-   Ubicar el vector de interrupción correspondiente según la prioridad.
+-   Implementar un algoritmo de "polling". Esto se requiere cuando existe más de una interrupción con la misma prioridad, consiste en preguntar cual de las interrupciones ocurrió.
+-   Borrar la bandera de interrupción
+-   Implementar el código de la ISR
+-   Retornar de la interrupción según la sintaxis del lenguaje usado.
+
+#### INT0
+
+-   Solofunciona en el pin RB0 configurado como ***entrada digital***
+-   Se puede configurar el flanco que lo dispara (subida o bajada)
+-   Tiene su bit de habilitación **INT0IE**
+-   Tiene su bit de indicación **INT0IF**
+-   Siempre es de alta prioridad. Unica en el PIC18 que no se puede configurar su prioridad.
+
+Código en ensamblador
+
+```nasm
+    ORG 0x0 ;Vector de Reset
+        goto Inicio
+    ORG 0x8 ;Vector de interrupciones de alta prioridad
+        goto ISR    ;Etiqueta que representa la interrupción
+    Inicio
+        bsf INTCON2,6   ;Flanco de subida
+        bcf INTCON,1    ;Borrar bandera
+        bsf INTCON,4    ;Habilitación de la interrupción
+        bsf INTCON,7    ;Habilitación global de interrupciones
+    Menu
+        ******************************************************
+    ISR
+        btfsc   INTCON,1    ;Algoritmo de polling, verifica cual interrupción se dio
+        goto    ISR_INT0    ;Va a la ISR necesaria
+        ******************************************************
+    ISR_INT0
+        bcf INTCON,1
+        bsf LATD,0
+        retfie
+```
+
+Código en C
+
+```C
+    void __interrupt() ISR(void);
+    ***************************
+    void main(void){
+        INTEDG0 =1;
+        INT0IF=0;
+        INT0IE=1;
+        GIE=1;
+        **********************
+    }
+    void __interrupt() ISR(void){
+        if(INT0IF==1){
+            INT0IF=0;
+            LATD0=1:
+        }
+        *************************
+    }
+```
